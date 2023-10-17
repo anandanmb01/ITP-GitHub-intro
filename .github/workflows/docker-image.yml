@@ -16,12 +16,14 @@ jobs:
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+    - name: Set TIMESTAMP
+      id: timestamp
+      run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
     - name: Build the Docker image
       run: |
-        TIMESTAMP=$(date +%Y%m%d%H%M%S)
-        docker build . --file Dockerfile --tag anandanmb01/docker_test:$TIMESTAMP
-        docker tag anandanmb01/docker_test:$TIMESTAMP anandanmb01/docker_test:latest
+        docker build . --file Dockerfile --tag anandanmb01/docker_test:${{ steps.timestamp.outputs.timestamp }}
+        docker tag anandanmb01/docker_test:${{ steps.timestamp.outputs.timestamp }} anandanmb01/docker_test:latest
     - name: Docker Push
       run: |
         docker push anandanmb01/docker_test:latest
-        docker push anandanmb01/docker_test:$(date +%Y%m%d%H%M%S)
+        docker push anandanmb01/docker_test:${{ steps.timestamp.outputs.timestamp }}
