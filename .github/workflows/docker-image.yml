@@ -1,13 +1,11 @@
-name: Docker Image CI
+name: Docker Image CI/CD
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +17,11 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag anandanmb01/docker_test:$(date +%s)
-      
+      run: |
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        docker build . --file Dockerfile --tag anandanmb01/docker_test:$TIMESTAMP
+        docker tag anandanmb01/docker_test:$TIMESTAMP anandanmb01/docker_test:latest
     - name: Docker Push
-      run: docker push anandanmb01/docker_test
+      run: |
+        docker push anandanmb01/docker_test:latest
+        docker push anandanmb01/docker_test:$(date +%Y%m%d%H%M%S)
