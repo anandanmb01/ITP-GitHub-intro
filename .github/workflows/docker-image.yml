@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
 
@@ -21,7 +19,7 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag chamodshehanka/node-test:$(date +%s)
+      run: docker build . --file Dockerfile --tag anandanmb01/node-test:$(date +%s)
       
     - name: Docker Push
-      run: docker push chamodshehanka/node-test
+      run: docker push anandanmb01/node-test
